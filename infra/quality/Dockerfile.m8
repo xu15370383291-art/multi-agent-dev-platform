@@ -1,0 +1,5 @@
+FROM agent-company-quality:m7
+USER root
+COPY m8/browser.cjs /opt/quality/browser.cjs
+LABEL company.quality-frame-metrics="1"
+USER 1000:1000

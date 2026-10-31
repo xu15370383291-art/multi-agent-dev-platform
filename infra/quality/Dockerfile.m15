@@ -1,0 +1,10 @@
+FROM agent-company-quality:m14
+USER root
+RUN cp /opt/company/runner.py /opt/company/transport_quality_runner.py
+COPY m15/quality_runner.py /opt/company/runner.py
+COPY m15/case_sandbox.cjs /opt/quality/case_sandbox.cjs
+COPY m15/capabilities.json /opt/quality/capabilities.json
+COPY m15/capability_check.cjs /opt/quality/capability_check.cjs
+COPY m15/preflight.cjs /opt/quality/preflight.cjs
+LABEL company.qa-capabilities="qa-sandbox-capabilities-v1"
+USER 1000:1000

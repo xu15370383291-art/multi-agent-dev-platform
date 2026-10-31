@@ -1,0 +1,41 @@
+// Real workbench, report IDs, downloaded bytes and application preview; no mocked endpoints.
+import {chromium,expect} from '@playwright/test';
+import fs from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+const root=new URL('../../.local/',import.meta.url);
+const state=JSON.parse(await fs.readFile(new URL('c1-live.json',root),'utf8'));
+const get=async path=>{const r=await fetch('http://127.0.0.1:8000/api/v1'+path);if(!r.ok)throw Error('API '+r.status);return r.json();};
+const projects=await get('/projects');const project=projects.find(p=>p.id===state.project_id);
+const runs=await get(`/projects/${state.project_id}/runs`);
+if(runs[0].status!=='succeeded'||runs[0].phase!=='delivered')throw Error('Real delivery required');
+const [delivery]=await get(`/runs/${runs[0].id}/deliveries`);
+const directory=new URL('c1-acceptance/',root);await fs.mkdir(directory,{recursive:true});
+const browser=await chromium.launch({channel:'msedge',headless:true});
+try{
+  const page=await browser.newPage({viewport:{width:1440,height:1000}});
+  await page.goto('http://127.0.0.1:5173/');
+  await page.getByRole('button',{name:new RegExp(project.name)}).click();
+  await expect(page.getByRole('heading',{name:'项目交付',exact:true})).toBeVisible();
+  const summaries=page.getByText('查看报告与测试证据',{exact:true});
+  await expect(summaries).toHaveCount(2);
+  for(const summary of await summaries.all())await summary.click();
+  const reports=await page.locator('details[open] pre').allTextContents();
+  for(const id of [delivery.manifest.qa_id,delivery.manifest.reviewer_id])if(!reports.some(text=>text.includes(id)))throw Error('Wrong report ID');
+  const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('link',{name:'下载交付 ZIP',exact:true}).click()]);
+  const target=new URL('workbench-download.zip',directory);await download.saveAs(fileURLToPath(target));
+  const digest=createHash('sha256').update(await fs.readFile(target)).digest('hex');
+  if(digest!==delivery.archive_hash)throw Error('Download digest mismatch');
+  const [preview]=await Promise.all([page.waitForEvent('popup'),page.getByRole('link',{name:'打开应用预览 ↗',exact:true}).click()]);
+  await expect(preview.getByRole('textbox')).toBeVisible();
+  if(preview.url()!==delivery.manifest.preview_url)throw Error('Wrong preview');
+  for(const summary of await summaries.all())await summary.click();
+  await page.evaluate(()=>scrollTo(0,0));
+  await page.screenshot({path:fileURLToPath(new URL('workbench-desktop.png',directory))});
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.getByRole('heading',{name:'项目交付',exact:true})).toBeVisible();
+  if(!await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth))throw Error('Workbench overflow');
+  await page.screenshot({path:fileURLToPath(new URL('workbench-mobile.png',directory))});
+  const evidence={status:'passed',project_id:state.project_id,run_id:runs[0].id,delivery_id:delivery.id,archive_hash:digest,preview_url:preview.url(),report_ids:[delivery.manifest.qa_id,delivery.manifest.reviewer_id]};
+  await fs.writeFile(new URL('workbench.json',directory),JSON.stringify(evidence,null,2));console.log(JSON.stringify(evidence,null,2));
+}finally{await browser.close();}

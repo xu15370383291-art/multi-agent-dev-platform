@@ -1,0 +1,9 @@
+FROM agent-company-quality:m10
+USER root
+RUN cp /opt/company/runner.py /opt/company/legacy_quality_runner.py
+COPY m11/quality_runner.py /opt/company/runner.py
+COPY m11/browser.cjs /opt/quality/browser.cjs
+COPY m11/case_sandbox.cjs /opt/quality/case_sandbox.cjs
+COPY m11/preflight.cjs /opt/quality/preflight.cjs
+LABEL company.quality-assertion-trace="1"
+USER 1000:1000

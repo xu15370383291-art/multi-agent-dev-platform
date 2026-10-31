@@ -1,0 +1,8 @@
+FROM agent-company-quality:m12
+USER root
+COPY m13/quality_runner.py /opt/company/runner.py
+COPY m13/browser.cjs /opt/quality/browser.cjs
+COPY m13/preflight.cjs /opt/quality/preflight.cjs
+COPY m13/runtime_witness.cjs /opt/quality/runtime_witness.cjs
+LABEL company.runtime-observation="1"
+USER 1000:1000

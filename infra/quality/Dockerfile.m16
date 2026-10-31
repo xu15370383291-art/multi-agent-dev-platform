@@ -1,0 +1,12 @@
+FROM agent-company-quality:m15
+USER root
+RUN cp /opt/company/runner.py /opt/company/capability_quality_runner.py
+COPY m16/quality_runner.py /opt/company/runner.py
+COPY m16/capabilities.json /opt/quality/capabilities.json
+COPY m16/case_sandbox.cjs /opt/quality/case_sandbox.cjs
+COPY m16/preflight.cjs /opt/quality/preflight.cjs
+COPY m16/browser.cjs /opt/quality/browser.cjs
+COPY m16/runtime_witness.cjs /opt/quality/runtime_witness.cjs
+COPY m16/runtime_checkpoint.cjs /opt/quality/runtime_checkpoint.cjs
+LABEL company.runtime-setup="1"
+USER 1000:1000

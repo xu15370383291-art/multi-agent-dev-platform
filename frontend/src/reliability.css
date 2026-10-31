@@ -1,0 +1,6 @@
+.reliability-panel{margin:16px 0 12px;padding-top:15px;border-top:1px solid var(--line);min-width:0;overflow-wrap:anywhere}
+.reliability-panel>h3{font-size:12px;letter-spacing:.08em;color:var(--muted);margin:0 0 12px}
+.reliability-panel input[type=checkbox]{width:auto;margin-right:7px;vertical-align:middle}.reliability-panel textarea{min-height:90px;margin-top:7px}
+.reliability-panel p{line-height:1.8;font-size:12px}.reliability-panel .buttons{display:flex;flex-direction:column;gap:8px;margin:12px 0}.reliability-panel .buttons button{text-align:left;white-space:normal;min-height:40px}
+.recovery-reason,.recovery-check{border:1px solid var(--line);border-left:2px solid var(--accent);padding:12px;border-radius:4px;margin:10px 0;background:#273439}.recovery-reason>strong,.recovery-check>strong{font-size:12px;color:var(--accent)}
+.reliability-panel label{font-size:12px;margin:12px 0;display:block}.reliability-panel select{display:block;max-width:100%;width:100%;margin-top:6px}.reliability-panel code{white-space:normal;word-break:break-all}.reliability-panel details{margin:14px 0}.reliability-panel summary{font-size:12px;cursor:pointer}.reliability-panel li{font-size:12px;line-height:1.8}.event-history>button{margin:8px 0 14px}.event-history pre{max-width:100%;overflow:auto}

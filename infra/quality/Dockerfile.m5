@@ -1,0 +1,7 @@
+# Add trusted QA evidence support without retagging the historical M1 image.
+ARG QUALITY_BASE=agent-company-quality:m1
+FROM ${QUALITY_BASE}
+USER root
+COPY browser.cjs /opt/quality/browser.cjs
+COPY quality_runner.py /opt/company/runner.py
+USER 1000:1000

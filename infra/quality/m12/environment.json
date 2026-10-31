@@ -1,0 +1,12 @@
+{
+  "contract": "qa-execution-environment-v1",
+  "context_options": {
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "hasTouch": false
+  },
+  "canvas_metrics": "bitmap/content_box/border_box",
+  "scope": "Default desktop baseline only. Explicit viewport in a case is preserved; approved mobile requirements need explicit cases."
+}

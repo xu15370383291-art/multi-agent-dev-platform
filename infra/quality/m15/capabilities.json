@@ -1,0 +1,32 @@
+{
+  "contract": "qa-sandbox-capabilities-v1",
+  "entry_bindings": ["page", "context", "assert", "baseURL", "unitEvidence", "candidateSHA", "canvasMetrics", "runtimeWitness"],
+  "helpers": ["setTimeout", "clearTimeout", "console", "performance"],
+  "return_types": {
+    "page.locator(selector)": "Locator capability",
+    "locator.all()": "Promise<Locator[]>; entries retain public Locator methods such as locator(), click() and textContent()",
+    "page.$$(selector)": "Promise<ElementHandle[]>; ElementHandle is not Locator; prefer locator.all() for chained locators",
+    "page.evaluate(callback)": "JSON data evaluated in the browser; browser globals belong inside this callback"
+  },
+  "unavailable_host_globals": {
+    "URL": "Use await page.evaluate(value=>new URL(value).origin,baseURL); URL belongs to the browser callback, not the QA host realm.",
+    "URLSearchParams": "Use a browser-evaluated callback for URL parsing.",
+    "window": "Use page.evaluate for browser state.",
+    "document": "Use page.locator or page.evaluate for DOM access.",
+    "location": "Use page.url() or page.evaluate for browser location.",
+    "navigator": "Use page.evaluate for browser navigator.",
+    "localStorage": "Use page.evaluate for browser storage.",
+    "DOMException": "Browser fault injection belongs inside page.addInitScript/page.evaluate callbacks.",
+    "browser": "Use context.browser() for another browser context and close it afterwards.",
+    "process": "Node process access is unavailable.",
+    "require": "Module loading is unavailable; use provided assert and browser capabilities.",
+    "module": "Node modules are unavailable.",
+    "Buffer": "Use browser-evaluated data operations or ordinary arrays.",
+    "fetch": "Use a browser callback, subject to the existing network boundary."
+  },
+  "examples": [
+    "const items=await page.locator('.item').all();assert.ok(await items[0].locator('.text').textContent());",
+    "const origin=await page.evaluate(value=>new URL(value).origin,baseURL);assert.ok(origin);"
+  ],
+  "boundary": "Constructors, private capability properties, Node process/modules and dynamic code remain blocked. Static checks are partial; preflight success is not functional acceptance."
+}

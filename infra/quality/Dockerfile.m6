@@ -1,0 +1,8 @@
+FROM agent-company-quality:m5.1
+USER root
+COPY --from=agent-company-executor:m4 /opt/company/runner.py /opt/company/execution_runner.py
+COPY m6/quality_runner.py /opt/company/runner.py
+COPY m6/browser.cjs /opt/quality/browser.cjs
+COPY m6/preflight.cjs /opt/quality/preflight.cjs
+LABEL company.progress-watchdog="2"
+USER 1000:1000

@@ -1,0 +1,7 @@
+FROM agent-company-quality:m13
+USER root
+COPY m14/quality_runner.py /opt/company/runner.py
+COPY m14/browser.cjs /opt/quality/browser.cjs
+COPY m14/result_file.cjs /opt/quality/result_file.cjs
+LABEL company.quality-result-transport="quality-result-file-v1"
+USER 1000:1000

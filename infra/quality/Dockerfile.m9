@@ -1,0 +1,7 @@
+FROM agent-company-quality:m8
+USER root
+COPY m9/quality_runner.py /opt/company/runner.py
+COPY m9/progress_evidence.py /opt/company/progress_evidence.py
+COPY m9/browser.cjs /opt/quality/browser.cjs
+LABEL company.quality-progress-sidecar="1"
+USER 1000:1000

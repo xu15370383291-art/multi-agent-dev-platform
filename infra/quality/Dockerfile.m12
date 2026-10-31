@@ -1,0 +1,10 @@
+FROM agent-company-quality:m11.1
+USER root
+COPY m12/quality_runner.py /opt/company/runner.py
+COPY m12/browser.cjs /opt/quality/browser.cjs
+COPY m12/preflight.cjs /opt/quality/preflight.cjs
+COPY m12/environment.json /opt/quality/environment.json
+COPY m12/canvas_metrics.cjs /opt/quality/canvas_metrics.cjs
+COPY contracts/script_entry.cjs /opt/quality/script_entry.cjs
+LABEL company.quality-execution-environment="1"
+USER 1000:1000
